@@ -1,22 +1,13 @@
-name: Deploy to GitHub Pages
+name: Deploy to Vercel
 
 on:
   push:
     branches: [ master, main ]
-
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
-# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
+  pull_request:
+    branches: [ master, main ]
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
@@ -27,66 +18,26 @@ jobs:
       with:
         node-version: '18'
         
-    - name: Install dependencies
-      run: |
-        cd collections
-        npm install
-        
-    - name: Build collections
-      run: |
-        cd collections
-        npm run build
-        
-    - name: Prepare deployment directory
-      run: |
-        # 创建部署目录
-        mkdir -p deploy
-        
-        # 复制根目录的主要文件
-        echo "Copying root files..."
-        cp index.html deploy/ || echo "index.html not found"
-        cp logo.png deploy/ || echo "logo.png not found"
-        cp manifest.json deploy/ || echo "manifest.json not found"
-        cp sw.js deploy/ || echo "sw.js not found"
-        cp -r lib deploy/ 2>/dev/null || echo "lib directory not found"
-        cp -r api deploy/ 2>/dev/null || echo "api directory not found"
-        cp -r .well-known deploy/ 2>/dev/null || echo ".well-known directory not found"
-        
-        # 复制collections-static目录的所有内容
-        echo "Copying collections-static files..."
-        if [ -d "collections-static" ]; then
-          cp -r collections-static/* deploy/
-          echo "Collections-static files copied successfully"
-        else
-          echo "collections-static directory not found"
-        fi
-        
-        # 详细检查部署目录内容
-        echo "=== Deployment directory contents ==="
-        ls -la deploy/
-        echo "=== Checking specific files ==="
-        echo "Logo file check:"
-        ls -la deploy/logo.png || echo "Logo not found in deploy"
-        echo "Collections file check:"
-        ls -la deploy/collections.html || echo "Collections not found in deploy"
-        echo "Index file check:"
-        ls -la deploy/index.html || echo "Index not found in deploy"
-        
-    - name: Setup Pages
-      uses: actions/configure-pages@v4
+    - name: Install Vercel CLI
+      run: npm install --global vercel@latest
       
-    - name: Upload artifact
-      uses: actions/upload-pages-artifact@v3
+    - name: Pull Vercel Environment Information
+      run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+      
+    - name: Build Project Artifacts
+      run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+      
+    - name: Deploy Project Artifacts to Vercel
+      run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
+      
+    - name: Comment PR
+      if: github.event_name == 'pull_request'
+      uses: actions/github-script@v6
       with:
-        path: deploy
-        
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-    - name: Deploy to GitHub Pages
-      id: deployment
-      uses: actions/deploy-pages@v4
+        script: |
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: '✅ Vercel deployment completed! Check the deployment at your Vercel dashboard.'
+          })
