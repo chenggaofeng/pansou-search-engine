@@ -29,22 +29,24 @@ jobs:
         cd collections
         npm run build
         
-    - name: Verify build output
+    - name: Prepare deployment directory
       run: |
-        # 检查构建结果
-        ls -la collections-static/
-        # 确保主要文件存在
-        ls -la
+        # 创建部署目录
+        mkdir -p deploy
+        # 复制根目录文件到部署目录
+        cp -r *.html *.css *.js *.png *.ico *.json deploy/ 2>/dev/null || true
+        # 复制collections-static内容到部署目录
+        cp -r collections-static/* deploy/ 2>/dev/null || true
+        # 检查部署目录内容
+        ls -la deploy/
+        echo "Logo file check:"
+        ls -la deploy/logo.png || echo "Logo not found"
+        echo "Collections file check:"
+        ls -la deploy/collections.html || echo "Collections not found"
         
     - name: Deploy to GitHub Pages
       if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: .
-        exclude_assets: |
-          collections/
-          .github/
-          node_modules/
-          *.md
-          .gitignore
+        publish_dir: deploy
