@@ -889,6 +889,121 @@
             }
         }
         
+        // 全局变量
+        let allCollectionCards = [];
+        let currentPage = 1;
+        const ITEMS_PER_PAGE = 9;
+
+        // 排序函数
+        function sortCollections(cards, sortBy) {
+            return [...cards].sort((a, b) => {
+                const aValue = a.dataset[sortBy];
+                const bValue = b.dataset[sortBy];
+
+                if (sortBy === 'views') {
+                    return parseInt(bValue, 10) - parseInt(aValue, 10);
+                }
+                return new Date(bValue) - new Date(aValue);
+            });
+        }
+
+        // 渲染集合函数（带分页）
+        function renderCollections(cards) {
+            const collectionsContainer = document.getElementById('collectionsContainer');
+            const firstPageBtn = document.getElementById('firstPage');
+            const prevPageBtn = document.getElementById('prevPage');
+            const nextPageBtn = document.getElementById('nextPage');
+            const lastPageBtn = document.getElementById('lastPage');
+            const pageInfoSpan = document.getElementById('pageInfo');
+            
+            if (!collectionsContainer) return;
+            
+            // 计算总页数
+            const totalPages = Math.ceil(cards.length / ITEMS_PER_PAGE);
+            
+            // 确保当前页码在有效范围内
+            if (currentPage < 1) currentPage = 1;
+            if (currentPage > totalPages && totalPages > 0) currentPage = totalPages;
+            if (totalPages === 0) currentPage = 1;
+            
+            // 计算当前页要显示的集合
+            const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+            const endIndex = Math.min(startIndex + ITEMS_PER_PAGE, cards.length);
+            const pageCards = cards.slice(startIndex, endIndex);
+            
+            // 渲染集合
+            collectionsContainer.innerHTML = '';
+            pageCards.forEach(card => {
+                collectionsContainer.appendChild(card);
+            });
+            
+            // 更新分页控件
+            updatePagination(totalPages);
+        }
+        
+        // 更新分页控件
+        function updatePagination(totalPages) {
+            const firstPageBtn = document.getElementById('firstPage');
+            const prevPageBtn = document.getElementById('prevPage');
+            const nextPageBtn = document.getElementById('nextPage');
+            const lastPageBtn = document.getElementById('lastPage');
+            const pageInfoSpan = document.getElementById('pageInfo');
+            
+            if (!pageInfoSpan) return;
+            
+            // 显示页码信息
+            if (totalPages > 0) {
+                pageInfoSpan.textContent = currentPage + ' / ' + totalPages;
+            } else {
+                pageInfoSpan.textContent = '0 / 0';
+            }
+            
+            // 更新按钮状态
+            if (firstPageBtn) firstPageBtn.disabled = currentPage <= 1;
+            if (prevPageBtn) prevPageBtn.disabled = currentPage <= 1;
+            if (nextPageBtn) nextPageBtn.disabled = currentPage >= totalPages || totalPages === 0;
+            if (lastPageBtn) lastPageBtn.disabled = currentPage >= totalPages || totalPages === 0;
+            
+            // 添加按钮样式
+            const buttons = [firstPageBtn, prevPageBtn, nextPageBtn, lastPageBtn].filter(btn => btn);
+            buttons.forEach(btn => {
+                if (btn.disabled) {
+                    btn.classList.add('opacity-50', 'cursor-not-allowed');
+                    btn.classList.remove('hover:opacity-90');
+                } else {
+                    btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                    btn.classList.add('hover:opacity-90');
+                }
+            });
+        }
+
+        // 过滤和排序函数
+        function filterAndSort() {
+            const activeCategory = document.querySelector('.category-tab.active')?.dataset.category || 'all';
+            const searchInput = document.getElementById('collectionSearch');
+            const sortOrderSelect = document.getElementById('sortOrder');
+            const collectionsContainer = document.getElementById('collectionsContainer');
+            
+            if (!searchInput || !sortOrderSelect || !collectionsContainer) return;
+            
+            const searchTerm = searchInput.value.toLowerCase();
+            const sortBy = sortOrderSelect.value;
+
+            let filteredCards = allCollectionCards.filter(card => {
+                const cardCategory = card.dataset.category;
+                const cardTags = card.dataset.tags;
+                const cardTitle = card.querySelector('h3').textContent.toLowerCase();
+                
+                const matchesCategory = activeCategory === 'all' || cardCategory === activeCategory;
+                const matchesSearch = !searchTerm || cardTitle.includes(searchTerm) || cardTags.includes(searchTerm);
+                
+                return matchesCategory && matchesSearch;
+            });
+
+            const sortedCards = sortCollections(filteredCards, sortBy);
+            renderCollections(sortedCards);
+        }
+
         window.addEventListener('pageshow', () => {
             initializeViews();
         });
@@ -902,13 +1017,6 @@
             // 初始化所有集合卡片
             allCollectionCards = Array.from(document.querySelectorAll('.collection-card'));
 
-            function renderCollections(cards) {
-                collectionsContainer.innerHTML = '';
-                cards.forEach(card => {
-                    collectionsContainer.appendChild(card);
-                });
-            }
-
             // 分页相关元素
             const firstPageBtn = document.getElementById('firstPage');
             const prevPageBtn = document.getElementById('prevPage');
@@ -916,94 +1024,9 @@
             const lastPageBtn = document.getElementById('lastPage');
             const pageInfoSpan = document.getElementById('pageInfo');
             
-            // 分页配置
-            const ITEMS_PER_PAGE = 9; // 每页显示的集合数量
-            let currentPage = 1; // 当前页码
+            // 函数已在全局作用域定义
 
-            // 渲染集合（带分页）
-            function renderCollections(cards) {
-                // 计算总页数
-                const totalPages = Math.ceil(cards.length / ITEMS_PER_PAGE);
-                
-                // 确保当前页码在有效范围内
-                if (currentPage < 1) currentPage = 1;
-                if (currentPage > totalPages && totalPages > 0) currentPage = totalPages;
-                if (totalPages === 0) currentPage = 1;
-                
-                // 计算当前页要显示的集合
-                const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-                const endIndex = Math.min(startIndex + ITEMS_PER_PAGE, cards.length);
-                const pageCards = cards.slice(startIndex, endIndex);
-                
-                // 渲染集合
-                collectionsContainer.innerHTML = '';
-                pageCards.forEach(card => {
-                    collectionsContainer.appendChild(card);
-                });
-                
-                // 更新分页控件
-                updatePagination(totalPages);
-            }
-            
-            // 更新分页控件
-            function updatePagination(totalPages) {
-                // 显示页码信息
-                if (totalPages > 0) {
-                    pageInfoSpan.textContent = currentPage + ' / ' + totalPages;
-                } else {
-                    pageInfoSpan.textContent = '0 / 0';
-                }
-                
-                // 更新按钮状态
-                firstPageBtn.disabled = currentPage <= 1;
-                prevPageBtn.disabled = currentPage <= 1;
-                nextPageBtn.disabled = currentPage >= totalPages || totalPages === 0;
-                lastPageBtn.disabled = currentPage >= totalPages || totalPages === 0;
-                
-                // 添加按钮样式
-                const buttons = [firstPageBtn, prevPageBtn, nextPageBtn, lastPageBtn];
-                buttons.forEach(btn => {
-                    if (btn.disabled) {
-                        btn.classList.add('opacity-50', 'cursor-not-allowed');
-                        btn.classList.remove('hover:opacity-90');
-                    } else {
-                        btn.classList.remove('opacity-50', 'cursor-not-allowed');
-                        btn.classList.add('hover:opacity-90');
-                    }
-                });
-            }
-
-            function sortCollections(cards, sortBy) {
-                return [...cards].sort((a, b) => {
-                    const aValue = a.dataset[sortBy];
-                    const bValue = b.dataset[sortBy];
-
-                    if (sortBy === 'views') {
-                        return parseInt(bValue, 10) - parseInt(aValue, 10);
-                    }
-                    return new Date(bValue) - new Date(aValue);
-                });
-            }
-
-            function filterAndSort() {
-                const activeCategory = document.querySelector('.category-tab.active').dataset.category;
-                const searchTerm = searchInput.value.toLowerCase();
-                const sortBy = sortOrderSelect.value;
-
-                let filteredCards = allCollectionCards.filter(card => {
-                    const cardCategory = card.dataset.category;
-                    const cardTags = card.dataset.tags;
-                    const cardTitle = card.querySelector('h3').textContent.toLowerCase();
-                    
-                    const matchesCategory = activeCategory === 'all' || cardCategory === activeCategory;
-                    const matchesSearch = !searchTerm || cardTitle.includes(searchTerm) || cardTags.includes(searchTerm);
-                    
-                    return matchesCategory && matchesSearch;
-                });
-
-                const sortedCards = sortCollections(filteredCards, sortBy);
-                renderCollections(sortedCards);
-            }
+            // 函数已在全局作用域定义
 
             categoryTabs.forEach(tab => {
                 tab.addEventListener('click', () => {
