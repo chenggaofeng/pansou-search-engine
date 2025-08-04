@@ -1,6 +1,6 @@
 import { e as createComponent, k as renderComponent, r as renderTemplate, n as defineScriptVars, h as addAttribute, m as maybeRenderHead } from '../chunks/astro/server_CzBadtu_.mjs';
 import 'kleur/colors';
-import { c as collectionsData, $ as $$Layout } from '../chunks/collections_F6n-1wqP.mjs';
+import { c as collectionsData, $ as $$Layout } from '../chunks/collections_B--8AtqY.mjs';
 /* empty css                                 */
 export { renderers } from '../renderers.mjs';
 
@@ -31,9 +31,9 @@ const $$Index = createComponent(async ($$result, $$props, $$slots) => {
 查看详情
 </a> </div> </div>`;
   }), defineScriptVars({ collections, platformMap })) })}`;
-}, "/Users/hua/Documents/vhost/pansou-ui/collections/src/pages/index.astro", void 0);
+}, "C:/Users/Cgaof/Desktop/trae/\u5F00\u6E90\u5DE5\u5177\u90E8\u7F72/\u76D8\u641C/collections/src/pages/index.astro", void 0);
 
-const $$file = "/Users/hua/Documents/vhost/pansou-ui/collections/src/pages/index.astro";
+const $$file = "C:/Users/Cgaof/Desktop/trae/开源工具部署/盘搜/collections/src/pages/index.astro";
 const $$url = "";
 
 const _page = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({

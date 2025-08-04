@@ -1,6 +1,6 @@
 import { e as createComponent, f as createAstro, k as renderComponent, r as renderTemplate, m as maybeRenderHead, h as addAttribute, l as renderScript } from '../chunks/astro/server_CzBadtu_.mjs';
 import 'kleur/colors';
-import { c as collectionsData, $ as $$Layout } from '../chunks/collections_F6n-1wqP.mjs';
+import { c as collectionsData, $ as $$Layout } from '../chunks/collections_B--8AtqY.mjs';
 /* empty css                                      */
 export { renderers } from '../renderers.mjs';
 
@@ -37,10 +37,10 @@ const $$Collection = createComponent(($$result, $$props, $$slots) => {
 </button> <a${addAttribute(resource.link, "href")} target="_blank" rel="noopener noreferrer" class="text-white bg-green-500 hover:bg-green-600 px-3 py-1.5 rounded-lg flex items-center transition-colors duration-200" data-astro-cid-3kz4ziuf> <i class="fas fa-external-link-alt mr-2" data-astro-cid-3kz4ziuf></i>立即查看
 </a> ${resource.password && renderTemplate`<button class="text-white bg-purple-500 hover:bg-purple-600 px-3 py-1.5 rounded-lg flex items-center transition-colors duration-200 copy-password-btn"${addAttribute(resource.password, "data-password")} data-astro-cid-3kz4ziuf> <i class="fas fa-key mr-2" data-astro-cid-3kz4ziuf></i>复制密码
 </button>`} </div> </div> </div> </div>`;
-  })} </div> </div> </div> <!-- 页脚 --> <div class="mt-12 text-center text-ios-gray" data-astro-cid-3kz4ziuf> <p class="text-sm" data-astro-cid-3kz4ziuf> <a href="/collections" class="text-ios-blue hover:underline" data-astro-cid-3kz4ziuf>← 返回资源集合页面</a> </p> </div> </div> ${renderScript($$result2, "/Users/hua/Documents/vhost/pansou-ui/collections/src/pages/collection.astro?astro&type=script&index=0&lang.ts")}  ` })}`;
-}, "/Users/hua/Documents/vhost/pansou-ui/collections/src/pages/collection.astro", void 0);
+  })} </div> </div> </div> <!-- 页脚 --> <div class="mt-12 text-center text-ios-gray" data-astro-cid-3kz4ziuf> <p class="text-sm" data-astro-cid-3kz4ziuf> <a href="/collections" class="text-ios-blue hover:underline" data-astro-cid-3kz4ziuf>← 返回资源集合页面</a> </p> </div> </div> ${renderScript($$result2, "C:/Users/Cgaof/Desktop/trae/\u5F00\u6E90\u5DE5\u5177\u90E8\u7F72/\u76D8\u641C/collections/src/pages/collection.astro?astro&type=script&index=0&lang.ts")}  ` })}`;
+}, "C:/Users/Cgaof/Desktop/trae/\u5F00\u6E90\u5DE5\u5177\u90E8\u7F72/\u76D8\u641C/collections/src/pages/collection.astro", void 0);
 
-const $$file = "/Users/hua/Documents/vhost/pansou-ui/collections/src/pages/collection.astro";
+const $$file = "C:/Users/Cgaof/Desktop/trae/开源工具部署/盘搜/collections/src/pages/collection.astro";
 const $$url = "/collection";
 
 const _page = /*#__PURE__*/Object.freeze(/*#__PURE__*/Object.defineProperty({
