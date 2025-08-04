@@ -1,65 +1,65 @@
 @echo off
 chcp 65001 >nul
 echo ========================================
-echo 盘搜项目 GitHub 自动部署脚本
+echo GitHub Auto Deploy Script for Pansou
 echo ========================================
 echo.
 
-echo [1/4] 检查 Git 状态...
+echo [1/4] Checking Git status...
 git status
 if %errorlevel% neq 0 (
-    echo 错误：Git 仓库未初始化或存在问题
+    echo Error: Git repository not initialized or has issues
     pause
     exit /b 1
 )
 
 echo.
-echo [2/4] 添加所有文件到 Git...
+echo [2/4] Adding all files to Git...
 git add .
 if %errorlevel% neq 0 (
-    echo 错误：添加文件失败
+    echo Error: Failed to add files
     pause
     exit /b 1
 )
 
 echo.
-echo [3/4] 提交更改...
-git commit -m "Update: 更新盘搜项目代码"
+echo [3/4] Committing changes...
+git commit -m "Update: Pansou project code update"
 if %errorlevel% neq 0 (
-    echo 提示：没有新的更改需要提交，或提交失败
+    echo Note: No new changes to commit, or commit failed
 )
 
 echo.
-echo [4/4] 推送到 GitHub...
-echo 请确保您已经设置了远程仓库地址！
-echo 如果还没有设置，请先运行：
+echo [4/4] Pushing to GitHub...
+echo Please make sure you have set up the remote repository!
+echo If not set up yet, please run:
 echo git remote add origin https://github.com/YOUR_USERNAME/pansou-search-engine.git
 echo.
-set /p confirm="是否继续推送到 GitHub？(y/n): "
+set /p confirm="Continue to push to GitHub? (y/n): "
 if /i "%confirm%"=="y" (
     git push -u origin main
     if %errorlevel% equ 0 (
         echo.
-        echo ✅ 成功推送到 GitHub！
+        echo Success! Pushed to GitHub!
         echo.
-        echo 下一步：
-        echo 1. 访问您的 GitHub 仓库
-        echo 2. 前往 https://vercel.com 部署项目
-        echo 3. 选择您的仓库并点击部署
+        echo Next steps:
+        echo 1. Visit your GitHub repository
+        echo 2. Go to https://vercel.com to deploy
+        echo 3. Select your repository and deploy
         echo.
     ) else (
         echo.
-        echo ❌ 推送失败！请检查：
-        echo 1. 网络连接
-        echo 2. GitHub 认证信息
-        echo 3. 远程仓库地址是否正确
+        echo Push failed! Please check:
+        echo 1. Network connection
+        echo 2. GitHub authentication
+        echo 3. Remote repository URL
         echo.
-        echo 如需帮助，请查看 GITHUB_DEPLOY_GUIDE.md
+        echo For help, see GITHUB_DEPLOY_GUIDE.md
     )
 ) else (
-    echo 取消推送操作
+    echo Push operation cancelled
 )
 
 echo.
-echo 按任意键退出...
+echo Press any key to exit...
 pause >nul
