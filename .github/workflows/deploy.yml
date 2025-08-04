@@ -18,13 +18,11 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: '18'
-        cache: 'npm'
-        cache-dependency-path: collections/package-lock.json
         
     - name: Install dependencies
       run: |
         cd collections
-        npm ci
+        npm install
         
     - name: Build collections
       run: |
