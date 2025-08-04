@@ -1,6 +1,12 @@
 # 盘搜 - 基于TG频道的网盘搜索工具
 
+[![GitHub](https://img.shields.io/badge/GitHub-pansou--search--engine-blue?logo=github)](https://github.com/chenggaofeng/pansou-search-engine)
+[![Deploy](https://img.shields.io/badge/Deploy-Vercel-black?logo=vercel)](https://vercel.com)
+[![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
+
 本项目是一个功能强大的网盘搜索工具前端页面，集成了多家网盘的搜索结果，并提供了丰富的前端功能和后端支持。
+
+**🔗 GitHub仓库**: https://github.com/chenggaofeng/pansou-search-engine
 
 ## ✨ 主要功能
 
@@ -12,7 +18,32 @@
     - 支持通过本地文件自定义中文违规词库。
 - **数据管理**: 提供带密码保护的接口，用于清除所有热搜记录。
 
-## 🚀 本地开发
+## 🚀 快速开始
+
+### GitHub部署
+
+1. **克隆仓库**:
+   ```bash
+   git clone https://github.com/chenggaofeng/pansou-search-engine.git
+   cd pansou-search-engine
+   ```
+
+2. **构建collections模块**:
+   ```bash
+   cd collections
+   npm install
+   npm run build
+   cd ..
+   ```
+
+3. **启动本地服务器**:
+   ```bash
+   python -m http.server 3000
+   # 或使用Node.js
+   npx serve . -p 3000
+   ```
+
+### Vercel部署
 
 本项目使用 Vercel 进行部署，您可以使用 Vercel CLI 在本地进行开发和测试。
 

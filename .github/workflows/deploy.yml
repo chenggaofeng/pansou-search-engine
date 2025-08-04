@@ -1,0 +1,52 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [ master, main ]
+  pull_request:
+    branches: [ master, main ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        cache: 'npm'
+        cache-dependency-path: collections/package-lock.json
+        
+    - name: Install dependencies
+      run: |
+        cd collections
+        npm ci
+        
+    - name: Build collections
+      run: |
+        cd collections
+        npm run build
+        
+    - name: Copy static files
+      run: |
+        # 复制collections构建结果到根目录
+        cp -r collections-static/* .
+        # 确保主要文件存在
+        ls -la
+        
+    - name: Deploy to GitHub Pages
+      if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: .
+        exclude_assets: |
+          collections/
+          .github/
+          node_modules/
+          *.md
+          .gitignore
