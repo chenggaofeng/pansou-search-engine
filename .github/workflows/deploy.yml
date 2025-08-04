@@ -33,16 +33,36 @@ jobs:
       run: |
         # 创建部署目录
         mkdir -p deploy
-        # 复制根目录文件到部署目录
-        cp -r *.html *.css *.js *.png *.ico *.json deploy/ 2>/dev/null || true
-        # 复制collections-static内容到部署目录
-        cp -r collections-static/* deploy/ 2>/dev/null || true
-        # 检查部署目录内容
+        
+        # 复制根目录的主要文件
+        echo "Copying root files..."
+        cp index.html deploy/ || echo "index.html not found"
+        cp logo.png deploy/ || echo "logo.png not found"
+        cp manifest.json deploy/ || echo "manifest.json not found"
+        cp sw.js deploy/ || echo "sw.js not found"
+        cp -r lib deploy/ 2>/dev/null || echo "lib directory not found"
+        cp -r api deploy/ 2>/dev/null || echo "api directory not found"
+        cp -r .well-known deploy/ 2>/dev/null || echo ".well-known directory not found"
+        
+        # 复制collections-static目录的所有内容
+        echo "Copying collections-static files..."
+        if [ -d "collections-static" ]; then
+          cp -r collections-static/* deploy/
+          echo "Collections-static files copied successfully"
+        else
+          echo "collections-static directory not found"
+        fi
+        
+        # 详细检查部署目录内容
+        echo "=== Deployment directory contents ==="
         ls -la deploy/
+        echo "=== Checking specific files ==="
         echo "Logo file check:"
-        ls -la deploy/logo.png || echo "Logo not found"
+        ls -la deploy/logo.png || echo "Logo not found in deploy"
         echo "Collections file check:"
-        ls -la deploy/collections.html || echo "Collections not found"
+        ls -la deploy/collections.html || echo "Collections not found in deploy"
+        echo "Index file check:"
+        ls -la deploy/index.html || echo "Index not found in deploy"
         
     - name: Deploy to GitHub Pages
       if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'
